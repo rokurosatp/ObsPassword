@@ -16,8 +16,7 @@ public class ServiceTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return COLUMN_NAMES.length;
 	}
 
 	@Override
