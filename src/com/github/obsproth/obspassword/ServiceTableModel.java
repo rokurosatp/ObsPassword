@@ -23,6 +23,11 @@ public class ServiceTableModel extends AbstractTableModel {
 	public int getRowCount() {
 		return serviceList.size();
 	}
+	
+	@Override
+	public String getColumnName(int column) {
+		return COLUMN_NAMES[column];
+	}
 
 	@Override
 	public Object getValueAt(int row, int column) {
