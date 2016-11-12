@@ -22,19 +22,18 @@ import javax.swing.table.DefaultTableModel;
 public class ObsPassword extends JFrame {
 
 	private static final String DATA_FILE = "data.csv";
-	private static final String[] COLUMN_NAMES = { "Name", "Length", "BaseHash", "Version" };
 	public static final int VERSION = 1;
 
-	DefaultTableModel tableModel;
+	ServiceTableModel tableModel;
 	JTable table;
 	JPasswordField passwordField;
 
-	public ObsPassword(List<String[]> list) {
+	public ObsPassword(List<ServiceElement> list) {
 		setSize(600, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//
 		setLayout(new BorderLayout());
-		tableModel = new DefaultTableModel(COLUMN_NAMES, 0);
+		tableModel = new ServiceTableModel();
 		table = new JTable(tableModel);
 		add(new JScrollPane(table), BorderLayout.CENTER);
 
@@ -64,37 +63,35 @@ public class ObsPassword extends JFrame {
 		northPanel.add(saveButton, BorderLayout.EAST);
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
-			String[] s = new String[COLUMN_NAMES.length];
-			s[0] = JOptionPane.showInputDialog(this, COLUMN_NAMES[0]);
-			if (s[0] == null) {
+			String name, lengthStr;
+			name = JOptionPane.showInputDialog(this, "Name");
+			if (name == null) {
 				return;
 			}
-			s[1] = JOptionPane.showInputDialog(this, COLUMN_NAMES[1]);
-			int len;
+			lengthStr = JOptionPane.showInputDialog(this, "Length");
+			int length;
 			try {
-				len = Integer.parseInt(s[1]);
+				length = Integer.parseInt(lengthStr);
 			} catch (NumberFormatException e) {
 				return;
 			}
-			if (len <= 0) {
+			if (length <= 0) {
 				return;
 			}
-			s[2] = HashUtil.getBaseHashStr(passwordField);
-			s[3] = String.valueOf(VERSION);
-			addData(s);
+			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
 		});
 		northPanel.add(addButton, BorderLayout.WEST);
 		add(northPanel, BorderLayout.NORTH);
 		//
-		for (String[] data : list) {
-			addData(data);
+		for (ServiceElement element : list) {
+			addData(element);
 		}
 		//
 		setVisible(true);
 	}
 
-	public void addData(String[] data) {
-		tableModel.addRow(data);
+	public void addData(ServiceElement element) {
+		tableModel.addRow(element);
 	}
 
 	public void writeFile() {
@@ -116,15 +113,15 @@ public class ObsPassword extends JFrame {
 		pw.close();
 	}
 
-	public static List<String[]> readFile() throws IOException {
-		List<String[]> list = new ArrayList<>();
+	public static List<ServiceElement> readFile() throws IOException {
+		List<ServiceElement> list = new ArrayList<>();
 		File file = new File(DATA_FILE);
 		if (file.exists() && file.isFile()) {
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String str;
 			while ((str = br.readLine()) != null) {
 				if (!str.isEmpty()) {
-					list.add(str.split(","));
+					list.add(ServiceElement.buildFromCSV(str));
 				}
 			}
 			br.close();

@@ -30,4 +30,9 @@ public class ServiceElement {
 		return Integer.valueOf(version);
 	}
 
+	public static ServiceElement buildFromCSV(String str) {
+		String[] strArr = str.split(",");
+		return new ServiceElement(strArr[0], Integer.parseInt(strArr[1]), strArr[2]);
+	}
+
 }
