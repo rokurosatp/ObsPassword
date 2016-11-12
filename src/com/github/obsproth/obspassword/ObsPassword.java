@@ -23,7 +23,7 @@ public class ObsPassword extends JFrame {
 
 	private static final String DATA_FILE = "data.csv";
 	private static final String[] COLUMN_NAMES = { "Name", "Length", "BaseHash", "Version" };
-	private static final int VERSION = 1;
+	public static final int VERSION = 1;
 
 	DefaultTableModel tableModel;
 	JTable table;
