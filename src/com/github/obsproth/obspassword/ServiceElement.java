@@ -18,16 +18,16 @@ public class ServiceElement {
 		return serviceName;
 	}
 
-	public int getLength() {
-		return length;
+	public Integer getLength() {
+		return Integer.valueOf(length);
 	}
 
 	public String getBaseHash() {
 		return baseHash;
 	}
 
-	public int getVersion() {
-		return version;
+	public Integer getVersion() {
+		return Integer.valueOf(version);
 	}
 
 }
