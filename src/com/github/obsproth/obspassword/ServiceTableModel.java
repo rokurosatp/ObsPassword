@@ -55,4 +55,9 @@ public class ServiceTableModel extends AbstractTableModel {
 		fireTableRowsInserted(list.size(), list.size());
 	}
 
+	public void removeRow(int row){
+		list.remove(row);
+		fireTableRowsDeleted(row, row);
+	}
+	
 }

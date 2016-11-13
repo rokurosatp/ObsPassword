@@ -61,7 +61,7 @@ public class ObsPassword extends JFrame {
 		add(southPanel, BorderLayout.SOUTH);
 
 		JPanel northPanel = new JPanel();
-		northPanel.setLayout(new GridLayout(1, 2));
+		northPanel.setLayout(new GridLayout(1, 3));
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
 			String name, lengthStr;
@@ -82,6 +82,14 @@ public class ObsPassword extends JFrame {
 			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
 		});
 		northPanel.add(addButton);
+		JButton removeButton = new JButton("REMOVE");
+		removeButton.addActionListener(event -> {
+			int row = table.getSelectedRow();
+			if(row>=0){
+				tableModel.removeRow(row);
+			}
+		});
+		northPanel.add(removeButton);
 		JButton saveButton = new JButton("SAVE");
 		saveButton.addActionListener(event -> {
 			writeFile();
