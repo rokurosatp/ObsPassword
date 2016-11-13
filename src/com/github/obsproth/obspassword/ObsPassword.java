@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 
@@ -44,6 +45,10 @@ public class ObsPassword extends JFrame {
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
 		genButton.addActionListener(event -> {
+			if(isPasswordFieldEmpty()){
+				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
+				return;
+			}
 			ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
 			if (element != null) {
 				if (element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
@@ -64,6 +69,10 @@ public class ObsPassword extends JFrame {
 		northPanel.setLayout(new GridLayout(1, 3));
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
+			if(isPasswordFieldEmpty()){
+				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
+				return;
+			}
 			String name, lengthStr;
 			name = JOptionPane.showInputDialog(this, "Name");
 			if (name == null) {
@@ -85,7 +94,7 @@ public class ObsPassword extends JFrame {
 		JButton removeButton = new JButton("REMOVE");
 		removeButton.addActionListener(event -> {
 			int row = table.getSelectedRow();
-			if(row>=0){
+			if (row >= 0) {
 				tableModel.removeRow(row);
 			}
 		});
@@ -103,6 +112,12 @@ public class ObsPassword extends JFrame {
 		}
 		//
 		setVisible(true);
+	}
+
+	public boolean isPasswordFieldEmpty() {
+		char[] password = passwordField.getPassword();
+		Arrays.fill(password, (char) 0);
+		return password.length > 0;
 	}
 
 	public void addData(ServiceElement element) {
