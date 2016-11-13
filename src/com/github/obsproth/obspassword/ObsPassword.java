@@ -62,7 +62,10 @@ public class ObsPassword extends JFrame {
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new BorderLayout());
 		JButton saveButton = new JButton("SAVE");
-		saveButton.addActionListener(event -> writeFile());
+		saveButton.addActionListener(event -> {
+			writeFile();
+			JOptionPane.showMessageDialog(this, "Done.");
+		});
 		northPanel.add(saveButton, BorderLayout.EAST);
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
