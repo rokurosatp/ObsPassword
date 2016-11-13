@@ -9,7 +9,7 @@ public class ServiceTableModel extends AbstractTableModel {
 
 	private static final String[] COLUMN_NAMES = { "Name", "Length", "BaseHash", "Version" };
 
-	private List<ServiceElement> serviceList = new ArrayList<>();
+	private List<ServiceElement> list = new ArrayList<>();
 
 	public ServiceTableModel() {
 	}
@@ -21,7 +21,7 @@ public class ServiceTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return serviceList.size();
+		return list.size();
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class ServiceTableModel extends AbstractTableModel {
 	}
 
 	public ServiceElement getSelectedElement(int row) {
-		return 0 <= row ? serviceList.get(row) : null;
+		return 0 <= row ? list.get(row) : null;
 	}
 
 	@Override
 	public Object getValueAt(int row, int column) {
-		ServiceElement element = serviceList.get(row);
+		ServiceElement element = list.get(row);
 		switch (column) {
 		case 0:
 			return element.getServiceName();
@@ -51,8 +51,8 @@ public class ServiceTableModel extends AbstractTableModel {
 	}
 
 	public void addRow(ServiceElement element) {
-		serviceList.add(element);
-		fireTableRowsInserted(serviceList.size(), serviceList.size());
+		list.add(element);
+		fireTableRowsInserted(list.size(), list.size());
 	}
 
 }
