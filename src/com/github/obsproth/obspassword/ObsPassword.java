@@ -126,7 +126,7 @@ public class ObsPassword extends JFrame {
 	public boolean isPasswordFieldEmpty() {
 		char[] password = passwordField.getPassword();
 		Arrays.fill(password, (char) 0);
-		return password.length > 0;
+		return password.length == 0;
 	}
 
 	public void addData(ServiceElement element) {
