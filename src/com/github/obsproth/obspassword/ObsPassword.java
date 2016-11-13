@@ -67,7 +67,7 @@ public class ObsPassword extends JFrame {
 		add(southPanel, BorderLayout.SOUTH);
 
 		JPanel northPanel = new JPanel();
-		northPanel.setLayout(new GridLayout(1, 3));
+		northPanel.setLayout(new GridLayout(1, 2));
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
 			if (isPasswordFieldEmpty()) {
@@ -90,6 +90,7 @@ public class ObsPassword extends JFrame {
 				return;
 			}
 			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
+			writeFile();
 		});
 		northPanel.add(addButton);
 		JButton removeButton = new JButton("REMOVE");
@@ -103,17 +104,12 @@ public class ObsPassword extends JFrame {
 				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Remove", JOptionPane.OK_CANCEL_OPTION)) {
 				case JOptionPane.OK_OPTION:
 					tableModel.removeRow(row);
+					writeFile();
 					break;
 				}
 			}
 		});
 		northPanel.add(removeButton);
-		JButton saveButton = new JButton("SAVE");
-		saveButton.addActionListener(event -> {
-			writeFile();
-			JOptionPane.showMessageDialog(this, "Done.");
-		});
-		northPanel.add(saveButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
 		for (ServiceElement element : list) {
