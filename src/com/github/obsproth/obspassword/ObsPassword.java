@@ -1,6 +1,7 @@
 package com.github.obsproth.obspassword;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,13 +61,7 @@ public class ObsPassword extends JFrame {
 		add(southPanel, BorderLayout.SOUTH);
 
 		JPanel northPanel = new JPanel();
-		northPanel.setLayout(new BorderLayout());
-		JButton saveButton = new JButton("SAVE");
-		saveButton.addActionListener(event -> {
-			writeFile();
-			JOptionPane.showMessageDialog(this, "Done.");
-		});
-		northPanel.add(saveButton, BorderLayout.EAST);
+		northPanel.setLayout(new GridLayout(1, 2));
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
 			String name, lengthStr;
@@ -86,7 +81,13 @@ public class ObsPassword extends JFrame {
 			}
 			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
 		});
-		northPanel.add(addButton, BorderLayout.WEST);
+		northPanel.add(addButton);
+		JButton saveButton = new JButton("SAVE");
+		saveButton.addActionListener(event -> {
+			writeFile();
+			JOptionPane.showMessageDialog(this, "Done.");
+		});
+		northPanel.add(saveButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
 		for (ServiceElement element : list) {
