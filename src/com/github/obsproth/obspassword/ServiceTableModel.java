@@ -23,10 +23,14 @@ public class ServiceTableModel extends AbstractTableModel {
 	public int getRowCount() {
 		return serviceList.size();
 	}
-	
+
 	@Override
 	public String getColumnName(int column) {
 		return COLUMN_NAMES[column];
+	}
+
+	public ServiceElement getSelectedElement(int row) {
+		return 0 <= row ? serviceList.get(row) : null;
 	}
 
 	@Override
@@ -49,6 +53,5 @@ public class ServiceTableModel extends AbstractTableModel {
 	public void addRow(ServiceElement element) {
 		// TODO Auto-generated method stub
 	}
-
 
 }

@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 public class ObsPassword extends JFrame {
 
@@ -43,9 +42,9 @@ public class ObsPassword extends JFrame {
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
 		genButton.addActionListener(event -> {
-			int row = table.getSelectedRow();
-			if (row >= 0) {
-				if (table.getValueAt(row, 2).equals(HashUtil.getBaseHashStr(passwordField))) {
+			ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
+			if (element != null) {
+				if (element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
 				} else {
 					JOptionPane.showMessageDialog(this, "ERROR");
 				}
