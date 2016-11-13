@@ -2,6 +2,8 @@ package com.github.obsproth.obspassword;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,7 +62,14 @@ public class ObsPassword extends JFrame {
 			}
 			byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
 			String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
-			JOptionPane.showMessageDialog(this, passwordStr);
+			switch (JOptionPane.showConfirmDialog(this, "Do you want to copy the password to the clipboard?", "",
+					JOptionPane.YES_NO_CANCEL_OPTION)) {
+			case JOptionPane.YES_OPTION:
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(passwordStr), null);
+				break;
+			case JOptionPane.NO_OPTION:
+				JOptionPane.showMessageDialog(this, passwordStr);
+			}
 		});
 		southPanel.add(genButton, BorderLayout.EAST);
 
