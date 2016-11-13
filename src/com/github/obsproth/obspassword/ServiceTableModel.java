@@ -51,7 +51,8 @@ public class ServiceTableModel extends AbstractTableModel {
 	}
 
 	public void addRow(ServiceElement element) {
-		// TODO Auto-generated method stub
+		serviceList.add(element);
+		fireTableRowsInserted(serviceList.size(), serviceList.size());
 	}
 
 }
