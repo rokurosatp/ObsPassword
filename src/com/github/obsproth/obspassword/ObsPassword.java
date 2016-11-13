@@ -96,7 +96,15 @@ public class ObsPassword extends JFrame {
 		removeButton.addActionListener(event -> {
 			int row = table.getSelectedRow();
 			if (row >= 0) {
-				tableModel.removeRow(row);
+				StringBuilder sb = new StringBuilder();
+				sb.append("Are you sure you want to remove ");
+				sb.append(tableModel.getSelectedElement(row).getServiceName());
+				sb.append(" ?");
+				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Remove", JOptionPane.OK_CANCEL_OPTION)) {
+				case JOptionPane.OK_OPTION:
+					tableModel.removeRow(row);
+					break;
+				}
 			}
 		});
 		northPanel.add(removeButton);
