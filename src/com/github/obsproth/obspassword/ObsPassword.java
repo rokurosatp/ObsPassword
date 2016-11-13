@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -45,6 +46,9 @@ public class ObsPassword extends JFrame {
 			ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
 			if (element != null) {
 				if (element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
+					byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
+					String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
+					JOptionPane.showMessageDialog(this, passwordStr);
 				} else {
 					JOptionPane.showMessageDialog(this, "ERROR");
 				}
