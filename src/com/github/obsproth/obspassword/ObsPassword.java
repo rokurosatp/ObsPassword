@@ -45,31 +45,32 @@ public class ObsPassword extends JFrame {
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
 		genButton.addActionListener(event -> {
-			if(isPasswordFieldEmpty()){
+			if (isPasswordFieldEmpty()) {
 				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
 				return;
 			}
 			ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
-			if (element != null) {
-				if (element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
-					byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
-					String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
-					JOptionPane.showMessageDialog(this, passwordStr);
-				} else {
-					JOptionPane.showMessageDialog(this, "ERROR");
-				}
-			} else {
-				JOptionPane.showMessageDialog(this, "NO SELECTED ROW");
+			if (element == null) {
+				JOptionPane.showMessageDialog(this, "ERROR : NO SELECTED ROW");
+				return;
 			}
+			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
+				JOptionPane.showMessageDialog(this, "ERROR : Password mismatch.");
+				return;
+			}
+			byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
+			String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
+			JOptionPane.showMessageDialog(this, passwordStr);
 		});
 		southPanel.add(genButton, BorderLayout.EAST);
+
 		add(southPanel, BorderLayout.SOUTH);
 
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new GridLayout(1, 3));
 		JButton addButton = new JButton("ADD");
 		addButton.addActionListener(event -> {
-			if(isPasswordFieldEmpty()){
+			if (isPasswordFieldEmpty()) {
 				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
 				return;
 			}
