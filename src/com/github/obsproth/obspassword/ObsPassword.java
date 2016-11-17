@@ -102,15 +102,15 @@ public class ObsPassword extends JFrame {
 			writeFile();
 		});
 		northPanel.add(addButton);
-		JButton removeButton = new JButton("REMOVE");
-		removeButton.addActionListener(event -> {
+		JButton deleteButton = new JButton("DELETE");
+		deleteButton.addActionListener(event -> {
 			int row = table.getSelectedRow();
 			if (row >= 0) {
 				StringBuilder sb = new StringBuilder();
-				sb.append("Are you sure you want to remove ");
+				sb.append("Are you sure you want to delete ");
 				sb.append(tableModel.getSelectedElement(row).getServiceName());
 				sb.append(" ?");
-				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Remove", JOptionPane.OK_CANCEL_OPTION)) {
+				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
 				case JOptionPane.OK_OPTION:
 					tableModel.removeRow(row);
 					writeFile();
@@ -118,7 +118,7 @@ public class ObsPassword extends JFrame {
 				}
 			}
 		});
-		northPanel.add(removeButton);
+		northPanel.add(deleteButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
 		for (ServiceElement element : list) {
