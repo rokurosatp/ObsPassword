@@ -11,7 +11,7 @@ public class ServiceElement {
 		this.serviceName = serviceName;
 		this.length = length;
 		this.baseHash = baseHash;
-		this.version = ObsPassword.VERSION;
+		this.version = ObsPassword.ALGO_VERSION;
 	}
 
 	public String getServiceName() {

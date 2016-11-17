@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -25,8 +26,9 @@ import javax.swing.JTable;
 
 public class ObsPassword extends JFrame {
 
+	private static final String VERSION = "0.1.0";
 	private static final String DATA_FILE = "data.csv";
-	public static final int VERSION = 1;
+	public static final int ALGO_VERSION = 1;
 
 	ServiceTableModel tableModel;
 	JTable table;
@@ -43,6 +45,8 @@ public class ObsPassword extends JFrame {
 
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
+		JLabel versionLabel = new JLabel("v" + VERSION);
+		southPanel.add(versionLabel, BorderLayout.WEST);
 		passwordField = new JPasswordField();
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
