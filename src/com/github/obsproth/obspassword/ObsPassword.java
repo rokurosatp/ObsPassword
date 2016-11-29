@@ -60,11 +60,11 @@ public class ObsPassword extends JFrame {
 				JOptionPane.showMessageDialog(this, "ERROR : NO SELECTED ROW");
 				return;
 			}
-			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
+			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
 				JOptionPane.showMessageDialog(this, "ERROR : Password mismatch.");
 				return;
 			}
-			byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
+			byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
 			String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
 			switch (JOptionPane.showConfirmDialog(this, "Do you want to copy the password to the clipboard?", "",
 					JOptionPane.YES_NO_CANCEL_OPTION)) {
@@ -102,7 +102,7 @@ public class ObsPassword extends JFrame {
 			if (length <= 0) {
 				return;
 			}
-			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
+			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
 			writeFile();
 		});
 		northPanel.add(addButton);
