@@ -37,6 +37,7 @@ public class ObsPassword extends JFrame {
 	public ObsPassword(List<ServiceElement> list) {
 		setSize(600, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("ObsPassword");
 		//
 		setLayout(new BorderLayout());
 		tableModel = new ServiceTableModel();
