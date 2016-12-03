@@ -17,6 +17,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -25,8 +26,9 @@ import javax.swing.JTable;
 
 public class ObsPassword extends JFrame {
 
+	private static final String VERSION = "0.1.1";
 	private static final String DATA_FILE = "data.csv";
-	public static final int VERSION = 1;
+	public static final int ALGO_VERSION = 1;
 
 	ServiceTableModel tableModel;
 	JTable table;
@@ -35,6 +37,7 @@ public class ObsPassword extends JFrame {
 	public ObsPassword(List<ServiceElement> list) {
 		setSize(600, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("ObsPassword");
 		//
 		setLayout(new BorderLayout());
 		tableModel = new ServiceTableModel();
@@ -43,6 +46,8 @@ public class ObsPassword extends JFrame {
 
 		JPanel southPanel = new JPanel();
 		southPanel.setLayout(new BorderLayout());
+		JLabel versionLabel = new JLabel("v" + VERSION);
+		southPanel.add(versionLabel, BorderLayout.WEST);
 		passwordField = new JPasswordField();
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
@@ -56,11 +61,11 @@ public class ObsPassword extends JFrame {
 				JOptionPane.showMessageDialog(this, "ERROR : NO SELECTED ROW");
 				return;
 			}
-			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField))) {
+			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
 				JOptionPane.showMessageDialog(this, "ERROR : Password mismatch.");
 				return;
 			}
-			byte[] hash = HashUtil.calcHash(passwordField, element.getServiceName(), element.getLength());
+			byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
 			String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
 			switch (JOptionPane.showConfirmDialog(this, "Do you want to copy the password to the clipboard?", "",
 					JOptionPane.YES_NO_CANCEL_OPTION)) {
@@ -98,19 +103,19 @@ public class ObsPassword extends JFrame {
 			if (length <= 0) {
 				return;
 			}
-			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField)));
+			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
 			writeFile();
 		});
 		northPanel.add(addButton);
-		JButton removeButton = new JButton("REMOVE");
-		removeButton.addActionListener(event -> {
+		JButton deleteButton = new JButton("DELETE");
+		deleteButton.addActionListener(event -> {
 			int row = table.getSelectedRow();
 			if (row >= 0) {
 				StringBuilder sb = new StringBuilder();
-				sb.append("Are you sure you want to remove ");
+				sb.append("Are you sure you want to delete ");
 				sb.append(tableModel.getSelectedElement(row).getServiceName());
 				sb.append(" ?");
-				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Remove", JOptionPane.OK_CANCEL_OPTION)) {
+				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
 				case JOptionPane.OK_OPTION:
 					tableModel.removeRow(row);
 					writeFile();
@@ -118,7 +123,7 @@ public class ObsPassword extends JFrame {
 				}
 			}
 		});
-		northPanel.add(removeButton);
+		northPanel.add(deleteButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
 		for (ServiceElement element : list) {
