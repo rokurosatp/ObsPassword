@@ -8,5 +8,5 @@ public interface UserInterface {
 
 	public void addData(ServiceElement element);
 	
-	public int showMessage(String message, int choice);
+	public void showMessage(String message);
 }
