@@ -24,9 +24,11 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.github.obsproth.obspassword.swing.ServiceTableModel;
+
 public class ObsPassword extends JFrame {
 
-	private static final String VERSION = "0.1.1";
+	public static final String VERSION = "0.1.1";
 	private static final String DATA_FILE = "data.csv";
 	public static final int ALGO_VERSION = 1;
 

@@ -1,9 +1,11 @@
-package com.github.obsproth.obspassword;
+package com.github.obsproth.obspassword.swing;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
+
+import com.github.obsproth.obspassword.ServiceElement;
 
 public class ServiceTableModel extends AbstractTableModel {
 
