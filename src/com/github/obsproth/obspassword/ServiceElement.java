@@ -7,11 +7,15 @@ public class ServiceElement {
 	private final String baseHash;
 	private final int version;
 
-	public ServiceElement(String serviceName, int length, String baseHash) {
+	private ServiceElement(String serviceName, int length, String baseHash, int version) {
 		this.serviceName = serviceName;
 		this.length = length;
 		this.baseHash = baseHash;
-		this.version = ObsPassword.ALGO_VERSION;
+		this.version = version;
+	}
+
+	public ServiceElement(String serviceName, int length, String baseHash) {
+		this(serviceName, length, baseHash, ObsPassword.ALGO_VERSION);
 	}
 
 	public String getServiceName() {
@@ -32,7 +36,7 @@ public class ServiceElement {
 
 	public static ServiceElement buildFromCSV(String str) {
 		String[] strArr = str.split(",");
-		return new ServiceElement(strArr[0], Integer.parseInt(strArr[1]), strArr[2]);
+		return new ServiceElement(strArr[0], Integer.parseInt(strArr[1]), strArr[2], Integer.parseInt(strArr[3]));
 	}
 
 }
