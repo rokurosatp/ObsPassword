@@ -126,9 +126,7 @@ public class ObsPassword extends JFrame {
 		northPanel.add(deleteButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
-		for (ServiceElement element : list) {
-			addData(element);
-		}
+		list.forEach(element -> addData(element));
 		//
 		setVisible(true);
 	}
