@@ -22,16 +22,16 @@ public class ServiceElement {
 		return serviceName;
 	}
 
-	public Integer getLength() {
-		return Integer.valueOf(length);
+	public int getLength() {
+		return length;
 	}
 
 	public String getBaseHash() {
 		return baseHash;
 	}
 
-	public Integer getVersion() {
-		return Integer.valueOf(version);
+	public int getVersion() {
+		return version;
 	}
 
 	public static ServiceElement buildFromCSV(String str) {
