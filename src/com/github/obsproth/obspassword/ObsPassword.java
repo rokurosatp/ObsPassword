@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,29 +53,32 @@ public class ObsPassword extends JFrame {
 		passwordField = new JPasswordField();
 		southPanel.add(passwordField, BorderLayout.CENTER);
 		JButton genButton = new JButton("GEN");
-		genButton.addActionListener(event -> {
-			if (isPasswordFieldEmpty()) {
-				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
-				return;
-			}
-			ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
-			if (element == null) {
-				JOptionPane.showMessageDialog(this, "ERROR : NO SELECTED ROW");
-				return;
-			}
-			if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
-				JOptionPane.showMessageDialog(this, "ERROR : Password mismatch.");
-				return;
-			}
-			byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
-			String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
-			switch (JOptionPane.showConfirmDialog(this, "Do you want to copy the password to the clipboard?", "",
-					JOptionPane.YES_NO_CANCEL_OPTION)) {
-			case JOptionPane.YES_OPTION:
-				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(passwordStr), null);
-				break;
-			case JOptionPane.NO_OPTION:
-				JOptionPane.showMessageDialog(this, passwordStr);
+		genButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (isPasswordFieldEmpty()) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The password field is empty.");
+					return;
+				}
+				ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
+				if (element == null) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : NO SELECTED ROW");
+					return;
+				}
+				if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : Password mismatch.");
+					return;
+				}
+				byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
+				String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
+				switch (JOptionPane.showConfirmDialog(ObsPassword.this, "Do you want to copy the password to the clipboard?", "",
+						JOptionPane.YES_NO_CANCEL_OPTION)) {
+				case JOptionPane.YES_OPTION:
+					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(passwordStr), null);
+					break;
+				case JOptionPane.NO_OPTION:
+					JOptionPane.showMessageDialog(ObsPassword.this, passwordStr);
+				}
 			}
 		});
 		southPanel.add(genButton, BorderLayout.EAST);
@@ -83,50 +88,58 @@ public class ObsPassword extends JFrame {
 		JPanel northPanel = new JPanel();
 		northPanel.setLayout(new GridLayout(1, 2));
 		JButton addButton = new JButton("ADD");
-		addButton.addActionListener(event -> {
-			if (isPasswordFieldEmpty()) {
-				JOptionPane.showMessageDialog(this, "ERROR : The password field is empty.");
-				return;
+		addButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (isPasswordFieldEmpty()) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The password field is empty.");
+					return;
+				}
+				String name, lengthStr;
+				name = JOptionPane.showInputDialog(ObsPassword.this, "Name");
+				if (name == null) {
+					return;
+				}
+				lengthStr = JOptionPane.showInputDialog(ObsPassword.this, "Length");
+				int length;
+				try {
+					length = Integer.parseInt(lengthStr);
+				} catch (NumberFormatException e) {
+					return;
+				}
+				if (length <= 0) {
+					return;
+				}
+				addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
+				writeFile();
 			}
-			String name, lengthStr;
-			name = JOptionPane.showInputDialog(this, "Name");
-			if (name == null) {
-				return;
-			}
-			lengthStr = JOptionPane.showInputDialog(this, "Length");
-			int length;
-			try {
-				length = Integer.parseInt(lengthStr);
-			} catch (NumberFormatException e) {
-				return;
-			}
-			if (length <= 0) {
-				return;
-			}
-			addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
-			writeFile();
 		});
 		northPanel.add(addButton);
 		JButton deleteButton = new JButton("DELETE");
-		deleteButton.addActionListener(event -> {
-			int row = table.getSelectedRow();
-			if (row >= 0) {
-				StringBuilder sb = new StringBuilder();
-				sb.append("Are you sure you want to delete ");
-				sb.append(tableModel.getSelectedElement(row).getServiceName());
-				sb.append(" ?");
-				switch (JOptionPane.showConfirmDialog(this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
-				case JOptionPane.OK_OPTION:
-					tableModel.removeRow(row);
-					writeFile();
-					break;
+		deleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				int row = table.getSelectedRow();
+				if (row >= 0) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("Are you sure you want to delete ");
+					sb.append(tableModel.getSelectedElement(row).getServiceName());
+					sb.append(" ?");
+					switch (JOptionPane.showConfirmDialog(ObsPassword.this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
+					case JOptionPane.OK_OPTION:
+						tableModel.removeRow(row);
+						writeFile();
+						break;
+					}
 				}
 			}
 		});
 		northPanel.add(deleteButton);
 		add(northPanel, BorderLayout.NORTH);
 		//
-		list.forEach(element -> addData(element));
+		for(ServiceElement element : list){
+			addData(element);
+		}
 		//
 		setVisible(true);
 	}
