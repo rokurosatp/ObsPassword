@@ -97,7 +97,7 @@ public class ObsPassword extends JFrame {
 				}
 				String name, lengthStr;
 				name = JOptionPane.showInputDialog(ObsPassword.this, "Name");
-				if (name.isEmpty()) {
+				if (name == null || name.isEmpty()) {
 					return;
 				}
 				lengthStr = JOptionPane.showInputDialog(ObsPassword.this, "Length");
