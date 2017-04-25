@@ -99,6 +99,9 @@ public class ObsPassword extends JFrame {
 				name = JOptionPane.showInputDialog(ObsPassword.this, "Name");
 				if (name == null || name.isEmpty()) {
 					return;
+				}else if(name.contains(",")){
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The name must not contain ','");
+					return;
 				}
 				lengthStr = JOptionPane.showInputDialog(ObsPassword.this, "Length");
 				int length;
