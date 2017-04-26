@@ -165,12 +165,8 @@ public class ObsPassword extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			pw.print(table.getValueAt(i, 0));
-			for (int j = 1; j < tableModel.getColumnCount(); j++) {
-				pw.print(',');
-				pw.print(table.getValueAt(i, j));
-			}
+		for (ServiceElement element : tableModel.list) {
+			pw.print(element.asCSV());
 			pw.println();
 		}
 		pw.close();

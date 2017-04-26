@@ -9,7 +9,7 @@ public class ServiceTableModel extends AbstractTableModel {
 
 	private static final String[] COLUMN_NAMES = { "Name", "Length", "BaseHash", "Version" };
 
-	private List<ServiceElement> list = new ArrayList<>();
+	public List<ServiceElement> list = new ArrayList<>();
 
 	public ServiceTableModel() {
 	}
