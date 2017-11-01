@@ -34,6 +34,18 @@ public class ServiceElement {
 		return version;
 	}
 
+	public String asCSV(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.serviceName);
+		sb.append(',');
+		sb.append(this.length);
+		sb.append(',');
+		sb.append(this.baseHash);
+		sb.append(',');
+		sb.append(this.version);
+		return sb.toString();
+	}
+	
 	public static ServiceElement buildFromCSV(String str) {
 		String[] strArr = str.split(",");
 		return new ServiceElement(strArr[0], Integer.parseInt(strArr[1]), strArr[2], Integer.parseInt(strArr[3]));

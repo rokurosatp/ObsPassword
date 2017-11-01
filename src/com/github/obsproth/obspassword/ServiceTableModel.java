@@ -9,7 +9,7 @@ public class ServiceTableModel extends AbstractTableModel {
 
 	private static final String[] COLUMN_NAMES = { "Name", "Length", "BaseHash", "Version" };
 
-	private List<ServiceElement> list = new ArrayList<>();
+	public List<ServiceElement> list = new ArrayList<>();
 
 	public ServiceTableModel() {
 	}
@@ -42,7 +42,7 @@ public class ServiceTableModel extends AbstractTableModel {
 		case 1:
 			return element.getLength();
 		case 2:
-			return element.getBaseHash();
+			return element.getBaseHash().substring(0, 7);
 		case 3:
 			return element.getVersion();
 		default:

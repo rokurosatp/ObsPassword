@@ -28,7 +28,7 @@ import javax.swing.JTable;
 
 public class ObsPassword extends JFrame {
 
-	private static final String VERSION = "0.1.1";
+	private static final String VERSION = "0.1.2";
 	private static final String DATA_FILE = "data.csv";
 	public static final int ALGO_VERSION = 1;
 
@@ -99,6 +99,9 @@ public class ObsPassword extends JFrame {
 				name = JOptionPane.showInputDialog(ObsPassword.this, "Name");
 				if (name == null || name.isEmpty()) {
 					return;
+				}else if(name.contains(",")){
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The name must not contain ','");
+					return;
 				}
 				lengthStr = JOptionPane.showInputDialog(ObsPassword.this, "Length");
 				int length;
@@ -162,12 +165,8 @@ public class ObsPassword extends JFrame {
 			e.printStackTrace();
 			return;
 		}
-		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			pw.print(table.getValueAt(i, 0));
-			for (int j = 1; j < tableModel.getColumnCount(); j++) {
-				pw.print(',');
-				pw.print(table.getValueAt(i, j));
-			}
+		for (ServiceElement element : tableModel.list) {
+			pw.print(element.asCSV());
 			pw.println();
 		}
 		pw.close();
