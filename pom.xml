@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
+    <java.version>1.7</java.version>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <maven.compiler.source>${java.version}</maven.compiler.source>
   </properties>
@@ -25,16 +25,44 @@
   <build>
     <sourceDirectory>src</sourceDirectory>
       <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.6.1</version>
-              <configuration>
-                  <!-- ここでJavaのバージョンを設定する -->
-                  <source>${java.version}</source>
-                  <target>${java.version}</target>
-              </configuration>
-          </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.6.1</version>
+            <configuration>
+                <!-- ここでJavaのバージョンを設定する -->
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+            </configuration>
+        </plugin>
+        <!-- 実行可能jarファイル用のプラグイン -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.0.0</version>
+          <configuration>
+            <finalName>obspassword</finalName>
+            <descriptorRefs>
+              <!-- 依存するリソースをすべてjarに同梱する -->
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <archive>
+              <manifest>
+                <mainClass>com.github.obsproth.obspassword.ObsPassword</mainClass>
+              </manifest>
+            </archive>
+          </configuration>
+          <executions>
+              <execution>
+                <!-- idタグは任意の文字列であれば何でもよい -->
+                <id>make-assembly</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+          </executions>
+        </plugin>
       </plugins>
   </build>
   <!-- ★ここまで -->

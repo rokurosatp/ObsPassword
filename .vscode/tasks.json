@@ -7,7 +7,8 @@
             "taskName": "verify",
             "type": "shell",
             "command": "mvn -B verify",
-            "group": "build"
+            "group": "build",
+            "problemMatcher": []
         },
         {
             "taskName": "test",
@@ -17,7 +18,7 @@
         },
         {
             "taskName": "run",
-            "command": "java -cp target/obspassword-1.0-SNAPSHOT.jar com.github.obsproth.obspassword.ObsPassword",
+            "command": "java -jar target/obspassword-jar-with-dependencies.jar",
             "options": {
                 "cwd": "${workspaceRoot}"
             },
