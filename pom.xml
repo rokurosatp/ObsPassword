@@ -48,7 +48,7 @@
             </descriptorRefs>
             <archive>
               <manifest>
-                <mainClass>com.github.obsproth.obspassword.ObsPassword</mainClass>
+                <mainClass>com.github.obsproth.obspassword.cli.ObsPassword</mainClass>
               </manifest>
             </archive>
           </configuration>
