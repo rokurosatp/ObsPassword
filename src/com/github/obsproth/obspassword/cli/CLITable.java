@@ -95,18 +95,24 @@ public class CLITable {
         for(int i = 0; i < this.columns.size(); i++) {
             CLITableColumn col = this.columns.get(i);
             if(col.autoSized) {
-                int maxLength = 0, length = 0;
+                int maxLength = 1, length = 0;
+                length = col.name.length();
+                if(length > maxLength) {
+                    maxLength = length;
+                }
+                
                 for(Object item : this.rows) {
                     length = col.calcWidth(item);
                     if(length > maxLength) {
                         maxLength = length;
                     }
-                    col.width = maxLength + 1;
                 }
+                col.width = maxLength + 1;
             }
         }
     }
 
+    @Override
     public String toString() {
         this.calcWidth();
         List<String> colstrs = new ArrayList<String>();
