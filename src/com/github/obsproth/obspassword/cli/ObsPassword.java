@@ -19,6 +19,20 @@ public class ObsPassword{
     
     public static String DATA_FILE = "data.csv";
     static int PASSWD_MAX_PROMPT = 3;
+    private static void showServiceList(ServiceTable tbl) {
+        CLITable view = new CLITable();
+        view.addColumn("Name", "s", true);
+        view.addColumn("Length", "d", 8);
+        view.addColumn("Version", "d", 8);
+        for(ServiceElement elem : tbl.getContents()) {
+            view.addRow(
+                elem.getServiceName(),
+                new Integer(elem.getLength()),
+                new Integer(elem.getVersion())
+            );
+        }
+        view.print();
+    }
     // 
     // DESCRIPTION:
     //     show table contents
@@ -33,17 +47,11 @@ public class ObsPassword{
             e.printStackTrace();
             return;
         }
-        CLITable view = new CLITable();
-        view.addColumn("Name", "s", true);
-        view.addColumn("Length", "d", 8);
-        view.addColumn("Version", "d", 8);
-
-        for(ServiceElement elem : tbl.getContents()) {
-            view.addRow(
-                elem.getServiceName(), new Integer(elem.getLength()), new Integer(elem.getVersion())
-            );
+        if (tbl.size() > 0) {
+            showServiceList(tbl);
+        } else {
+            System.out.println("* The table has no service.");
         }
-        view.print();
     }
     // 
     // DESCRIPTION:
