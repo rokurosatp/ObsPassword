@@ -69,7 +69,7 @@ public class ObsPassword{
             if (password == null) {
                 return null;
             }
-            if (elem.getBaseHash().equals(HashUtil.getBaseHashStr(password))) {
+            if (elem.getBaseHash().equals(HashUtil.getBaseHashStr(password, false))) {
                 return password;
             }
             for(int i = 0; i < password.length; i++) {
