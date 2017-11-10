@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -14,6 +15,12 @@ import java.awt.datatransfer.Clipboard;
 
 import com.github.obsproth.obspassword.HashUtil;
 import com.github.obsproth.obspassword.ServiceElement;
+
+class PasswordMismatch extends RuntimeException {
+    public PasswordMismatch() {
+        super();
+    }
+}
 
 public class ObsPassword{
     
@@ -61,10 +68,10 @@ public class ObsPassword{
         System.out.println();
         System.out.println("\tjava -jar obspassword list\tshow available services");
         System.out.println("\tjava -jar obspassword generate servicename\tgenerate password");
+        System.out.println("\tjava -jar obspassword add [servicename] [length]\tadd password to service");
         System.out.println();
         System.out.println("*--- (not Implemented) ---");
         System.out.println("\t<remove>\tdelete data from service");
-        System.out.println("\t<add>\tadd password to service");
     }
     //
     // input password manager contains retry
@@ -88,6 +95,80 @@ public class ObsPassword{
             }
         }
         return null;
+    }
+
+    private static String getBaseHashFromInputPassword(Console cons) {
+        char[] password1 = null, password2 = null;
+        String baseHash = null;
+        passwordCheck: while(baseHash == null){
+            try {
+                password1 = cons.readPassword("        Enter the master password of service:");
+                password2 = cons.readPassword("Enter the master password of service (again):");
+                if (!Arrays.equals(password1, password2)) {
+                    throw new PasswordMismatch();
+                }
+                baseHash = HashUtil.getBaseHashStr(password1);
+            } catch (PasswordMismatch e) {
+                System.out.println("Password mismatched! try again.");
+                continue passwordCheck;
+            } finally {
+                if(password1 != null) {
+                    for(int i = 0; i < password1.length; i++) {password1[i] = '\n';}
+                }
+                if(password2 != null) {
+                    for(int i = 0; i < password2.length; i++) {password2[i] = '\n';}
+                }
+            }
+        }
+        return baseHash;
+    }
+
+    public static void doAdd(String name, String lengthStr) {
+        ServiceTable tbl = null;
+        try{
+            tbl = new ServiceTable(DATA_FILE);
+        } catch (IOException e)  {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        Console cons = System.console();
+        String serviceName = name;
+        // サービス名は予めコマンドライン引数で決めておくか、実行時に入力
+        if (serviceName == null) {
+            serviceName = cons.readLine("Enter ServiceName:");
+        }
+        int length = 16;
+        if (lengthStr != null) {
+            try{
+                length = Integer.parseInt(lengthStr);
+            } catch (NumberFormatException e) {
+                System.out.println("length must be decimal values");
+                return;
+            }
+        }
+        lengthPrompt: while(lengthStr == null) {
+            try{
+                lengthStr = cons.readLine("Enter Length(default 16):");
+                if(lengthStr.length() != 0) {
+                    length = Integer.parseInt(lengthStr);
+                }
+                if (length <= 0 || length >= 256) {
+                    System.out.println("length must be in range 1 to 255");
+                    continue lengthPrompt;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("input decimal values");
+                continue lengthPrompt;
+            }
+        }
+        // passwordを入力してbaseHashを取得
+        String hash = getBaseHashFromInputPassword(cons);
+        if (hash == null) {
+            return;
+        }
+        tbl.add(name, length, hash);
+        System.out.println(String.format("Added Service %s; length:%d, Hash:%s...", name, length, hash));
+        tbl.save(DATA_FILE);
     }
     // パスワードの生成部分 フローがあってるか怪しい
     // 
@@ -135,11 +216,19 @@ public class ObsPassword{
             if(operation.equals("list")) {
                 doList();
             } else if(operation.equals("generate")) {
-                if (args.length > 1) {
+                if (args.length > 1){
                     doGenerate(args[1]);
                 } else {
                     System.out.println("error: too few argument");
                     showUsage();
+                }
+            } else if(operation.equals("add")) {
+                if (args.length > 2) {
+                    doAdd(args[1], args[2]);
+                } else if (args.length > 1){
+                    doAdd(args[1], null);
+                } else {
+                    doAdd(null, null);
                 }
             } else {
                 showUsage();

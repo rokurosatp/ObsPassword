@@ -89,6 +89,10 @@ class ServiceTable {
         return null;
     }
 
+    public void add(String name, int length, String baseHash) {
+        this.contents.add(new ServiceElement(name, length, baseHash));
+    }
+
     // indexに対応した要素を取得q
     //
     public ServiceElement get(int i) {
