@@ -2,4 +2,29 @@
 /.classpath
 /.project
 /data.csv
+
+
+### https://raw.github.com/github/gitignore/01c81930bf329ad34200da234017ea3ec36c5b47/Global/VisualStudioCode.gitignore
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+
+### https://raw.github.com/github/gitignore/01c81930bf329ad34200da234017ea3ec36c5b47/Maven.gitignore
+
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
+!/.mvn/wrapper/maven-wrapper.jar
 /.pydevproject
