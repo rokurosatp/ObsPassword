@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import com.github.obsproth.obspassword.ServiceElement;

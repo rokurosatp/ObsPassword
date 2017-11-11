@@ -1,18 +1,9 @@
 package com.github.obsproth.obspassword.cli;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Console;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.List;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-
 import com.github.obsproth.obspassword.HashUtil;
 import com.github.obsproth.obspassword.ServiceElement;
 
