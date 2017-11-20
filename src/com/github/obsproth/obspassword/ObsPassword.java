@@ -108,9 +108,11 @@ public class ObsPassword extends JFrame {
 				try {
 					length = Integer.parseInt(lengthStr);
 				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The length is invalid.");
 					return;
 				}
 				if (length <= 0) {
+					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The length must be a positive integer.");
 					return;
 				}
 				addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
