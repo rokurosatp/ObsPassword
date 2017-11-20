@@ -10,7 +10,7 @@ public class ServiceElement {
 	private ServiceElement(String serviceName, int length, String baseHash, int version) {
 		this.serviceName = serviceName;
 		this.length = length;
-		this.baseHash = baseHash;
+		this.baseHash = baseHash.substring(0, HashUtil.BASEHASH_LENGTH);
 		this.version = version;
 	}
 

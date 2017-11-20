@@ -9,6 +9,7 @@ public class HashUtil {
 	private static final String HASH_ALGO = "SHA-512";
 	private static final String BASE_SALT = "ObsPassword";
 	private static final int STRETCHING = 123456;
+	public static final int BASEHASH_LENGTH = 8;
 
 	public static String getBaseHashStr(char[] password) {
 		return getBaseHashStr(password, true);
@@ -20,7 +21,7 @@ public class HashUtil {
 		for (int i = 0; i < passByte.length; i++) {
 			sb.append(String.format("%02x", passByte[i]));
 		}
-		return sb.toString();
+		return sb.toString().substring(0, BASEHASH_LENGTH);
 	}
 
 	public static byte[] calcHash(char[] password, String name, int length) {

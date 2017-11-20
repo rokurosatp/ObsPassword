@@ -42,7 +42,7 @@ public class ServiceTableModel extends AbstractTableModel {
 		case 1:
 			return element.getLength();
 		case 2:
-			return element.getBaseHash().substring(0, 7);
+			return element.getBaseHash();
 		case 3:
 			return element.getVersion();
 		default:
