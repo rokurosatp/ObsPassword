@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Console;
 import java.util.Arrays;
-import java.util.Base64;
+import com.github.obsproth.obspassword.common.reductor.ReductorFactory;
 import com.github.obsproth.obspassword.HashUtil;
 import com.github.obsproth.obspassword.ServiceElement;
 
@@ -197,8 +197,15 @@ public class ObsPassword{
         if(hash == null) {
             return;
         }
-        String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, elem.getLength());
-        System.out.println(passwordStr);
+        char[] passwordChars = null;
+        try {
+            passwordChars = ReductorFactory.getMixer(ReductorFactory.BASE64)
+                .generate(hash, elem.getLength());
+            System.out.println(passwordChars);
+        } finally {
+            Arrays.fill(hash, (byte)0x00);
+            if (passwordChars != null) { Arrays.fill(passwordChars, '\n'); }
+        }
     }
 
     public static void parseArguments(String [] args) {
