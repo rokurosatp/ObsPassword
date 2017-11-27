@@ -12,9 +12,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import com.github.obsproth.obspassword.common.reductor.ReductorFactory;
 
 public class ObsPassword extends JFrame {
 
@@ -70,15 +72,17 @@ public class ObsPassword extends JFrame {
 					return;
 				}
 				byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
-				String passwordStr = Base64.getEncoder().encodeToString(hash).substring(0, element.getLength());
+				char[] passwordChars = ReductorFactory.getMixer(ReductorFactory.BASE64).generate(hash, element.getLength());
 				switch (JOptionPane.showConfirmDialog(ObsPassword.this, "Do you want to copy the password to the clipboard?", "",
 						JOptionPane.YES_NO_CANCEL_OPTION)) {
 				case JOptionPane.YES_OPTION:
-					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(passwordStr), null);
+					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(passwordChars)), null);
 					break;
 				case JOptionPane.NO_OPTION:
-					JOptionPane.showMessageDialog(ObsPassword.this, passwordStr);
+					JOptionPane.showMessageDialog(ObsPassword.this, new String(passwordChars));
+					break;
 				}
+				Arrays.fill(passwordChars, (char)0);
 			}
 		});
 		southPanel.add(genButton, BorderLayout.EAST);
