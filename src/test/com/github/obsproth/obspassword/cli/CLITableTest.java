@@ -1,4 +1,3 @@
-package test.com.github.obsproth.obspassword.cli;
 import junit.framework.*;
 
 import java.lang.reflect.Field;
