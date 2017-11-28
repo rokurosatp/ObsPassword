@@ -17,7 +17,7 @@ import com.github.obsproth.obspassword.ServiceElement;
 //
 //
 //
-class ServiceTable {
+public class ServiceTable {
     private List<ServiceElement> contents;
     //
     // default contructor
