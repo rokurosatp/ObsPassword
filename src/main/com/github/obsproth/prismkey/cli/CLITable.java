@@ -5,6 +5,7 @@
 package com.github.obsproth.prismkey.cli;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatConversionException;
 import java.util.List;
 
 class CLITableColumn {
@@ -83,8 +84,13 @@ public class CLITable {
             );
         }
         List<Object> row = new ArrayList<Object>();
-        for(Object arg : args) {
-            row.add(arg);
+        for(int i = 0; i < args.length; i++) {
+            try {
+                String.format("%"+this.columns.get(i).format, args[i]);
+            } catch (IllegalFormatConversionException e) {
+                throw new IllegalArgumentException(e);
+            }
+            row.add(args[i]);
         }
         this.rows.add(row);
     }
@@ -99,8 +105,8 @@ public class CLITable {
                     maxLength = length;
                 }
                 
-                for(Object item : this.rows) {
-                    length = col.calcWidth(item);
+                for(List<Object> row : this.rows) {
+                    length = col.calcWidth(row.get(i));
                     if(length > maxLength) {
                         maxLength = length;
                     }
