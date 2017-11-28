@@ -27,9 +27,9 @@ public class CLITableTest extends TestCase {
         table.addColumn("B", "s", 10);
         table.addRow(new Integer(0), "test");
         TestCase.assertEquals(
-            "A  B             \n"+
-            "-- --------------\n"+
-            "0  test          \n",
+            "A           B\n"+
+            "-- ----------\n"+
+            "0        test\n",
             table.toString()
         );
     }
