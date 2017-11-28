@@ -6,7 +6,7 @@ public class ByteEncoder {
         int length = hex.length();
         byte[] result = new byte[length / 2 + (length % 2)];
         for(int i = 0; i < length; i += 2) {
-            result[i / 2] = Byte.parseByte(hex.substring(i, Integer.min(i + 2, length)));
+            result[i / 2] = (byte)Integer.parseInt(hex.substring(i, Integer.min(i + 2, length)), 16);
         }
         return result;
     }
