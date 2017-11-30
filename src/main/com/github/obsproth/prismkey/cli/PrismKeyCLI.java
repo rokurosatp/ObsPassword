@@ -3,7 +3,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Console;
 import java.util.Arrays;
+<<<<<<< 2f8338b7d06a64a56c344260564729b682d0875d
 import com.github.obsproth.prismkey.common.generator.*;
+=======
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import com.github.obsproth.prismkey.common.reductor.ReductorFactory;
+>>>>>>> add cli clipboard feature
 import com.github.obsproth.prismkey.HashUtil;
 import com.github.obsproth.prismkey.ServiceElement;
 
@@ -161,6 +167,13 @@ public class PrismKeyCLI {
         System.out.println(String.format("Added Service %s; length:%d, Hash:%s...", name, length, hash));
         tbl.save(DATA_FILE);
     }
+    // パスワードを出力する
+    //
+    //
+    private static void outputPassword(char[] passwordChars) {
+        System.out.println("Password generated into Clipboard");
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(String.valueOf(passwordChars)), null);
+    }
     // パスワードの生成部分 フローがあってるか怪しい
     // 
     //
@@ -184,7 +197,7 @@ public class PrismKeyCLI {
             basePassword = passwordPrompt("input master password :", elem);
             if(basePassword != null) {
                 password = GeneratorFactory.getGenerator(elem).generate(basePassword, elem);
-                System.out.println(password);
+                outputPassword(password);
             }
         } finally {
             if (basePassword != null) { Arrays.fill(basePassword, '\n'); }
