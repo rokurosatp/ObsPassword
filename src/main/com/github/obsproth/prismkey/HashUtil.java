@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword;
+package com.github.obsproth.prismkey;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

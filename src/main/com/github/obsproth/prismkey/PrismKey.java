@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword;
+package com.github.obsproth.prismkey;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -26,9 +26,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.github.obsproth.obspassword.common.reductor.ReductorFactory;
+import com.github.obsproth.prismkey.common.reductor.ReductorFactory;
 
-public class ObsPassword extends JFrame {
+public class PrismKey extends JFrame {
 
 	private static final String VERSION = "0.1.2";
 	private static final String DATA_FILE = "data.csv";
@@ -38,10 +38,10 @@ public class ObsPassword extends JFrame {
 	JTable table;
 	JPasswordField passwordField;
 
-	public ObsPassword(List<ServiceElement> list) {
+	public PrismKey(List<ServiceElement> list) {
 		setSize(600, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("ObsPassword");
+		setTitle("PrismKey");
 		//
 		setLayout(new BorderLayout());
 		tableModel = new ServiceTableModel();
@@ -59,27 +59,27 @@ public class ObsPassword extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (isPasswordFieldEmpty()) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The password field is empty.");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The password field is empty.");
 					return;
 				}
 				ServiceElement element = tableModel.getSelectedElement(table.getSelectedRow());
 				if (element == null) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : NO SELECTED ROW");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : NO SELECTED ROW");
 					return;
 				}
 				if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : Password mismatch.");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : Password mismatch.");
 					return;
 				}
 				byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
 				char[] passwordChars = ReductorFactory.getMixer(ReductorFactory.BASE64).generate(hash, element.getLength());
-				switch (JOptionPane.showConfirmDialog(ObsPassword.this, "Do you want to copy the password to the clipboard?", "",
+				switch (JOptionPane.showConfirmDialog(PrismKey.this, "Do you want to copy the password to the clipboard?", "",
 						JOptionPane.YES_NO_CANCEL_OPTION)) {
 				case JOptionPane.YES_OPTION:
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(passwordChars)), null);
 					break;
 				case JOptionPane.NO_OPTION:
-					JOptionPane.showMessageDialog(ObsPassword.this, new String(passwordChars));
+					JOptionPane.showMessageDialog(PrismKey.this, new String(passwordChars));
 					break;
 				}
 				Arrays.fill(passwordChars, (char)0);
@@ -96,27 +96,27 @@ public class ObsPassword extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				if (isPasswordFieldEmpty()) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The password field is empty.");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The password field is empty.");
 					return;
 				}
 				String name, lengthStr;
-				name = JOptionPane.showInputDialog(ObsPassword.this, "Name");
+				name = JOptionPane.showInputDialog(PrismKey.this, "Name");
 				if (name == null || name.isEmpty()) {
 					return;
 				}else if(name.contains(",")){
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The name must not contain ','");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The name must not contain ','");
 					return;
 				}
-				lengthStr = JOptionPane.showInputDialog(ObsPassword.this, "Length");
+				lengthStr = JOptionPane.showInputDialog(PrismKey.this, "Length");
 				int length;
 				try {
 					length = Integer.parseInt(lengthStr);
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The length is invalid.");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The length is invalid.");
 					return;
 				}
 				if (length <= 0) {
-					JOptionPane.showMessageDialog(ObsPassword.this, "ERROR : The length must be a positive integer.");
+					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The length must be a positive integer.");
 					return;
 				}
 				addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
@@ -134,7 +134,7 @@ public class ObsPassword extends JFrame {
 					sb.append("Are you sure you want to delete ");
 					sb.append(tableModel.getSelectedElement(row).getServiceName());
 					sb.append(" ?");
-					switch (JOptionPane.showConfirmDialog(ObsPassword.this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
+					switch (JOptionPane.showConfirmDialog(PrismKey.this, sb.toString(), "Delete", JOptionPane.OK_CANCEL_OPTION)) {
 					case JOptionPane.OK_OPTION:
 						tableModel.removeRow(row);
 						writeFile();
@@ -195,7 +195,7 @@ public class ObsPassword extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
-		new ObsPassword(readFile());
+		new PrismKey(readFile());
 	}
 
 }

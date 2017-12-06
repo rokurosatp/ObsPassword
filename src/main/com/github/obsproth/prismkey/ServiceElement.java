@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword;
+package com.github.obsproth.prismkey;
 
 public class ServiceElement {
 
@@ -15,7 +15,7 @@ public class ServiceElement {
 	}
 
 	public ServiceElement(String serviceName, int length, String baseHash) {
-		this(serviceName, length, baseHash, ObsPassword.ALGO_VERSION);
+		this(serviceName, length, baseHash, PrismKey.ALGO_VERSION);
 	}
 
 	public String getServiceName() {

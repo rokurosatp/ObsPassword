@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword;
+package com.github.obsproth.prismkey;
 
 import java.util.ArrayList;
 import java.util.List;
