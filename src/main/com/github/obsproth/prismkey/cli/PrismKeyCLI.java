@@ -1,11 +1,11 @@
-package com.github.obsproth.obspassword.cli;
+package com.github.obsproth.prismkey.cli;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Console;
 import java.util.Arrays;
-import com.github.obsproth.obspassword.common.reductor.ReductorFactory;
-import com.github.obsproth.obspassword.HashUtil;
-import com.github.obsproth.obspassword.ServiceElement;
+import com.github.obsproth.prismkey.common.reductor.ReductorFactory;
+import com.github.obsproth.prismkey.HashUtil;
+import com.github.obsproth.prismkey.ServiceElement;
 
 class PasswordMismatch extends RuntimeException {
     public PasswordMismatch() {
@@ -13,7 +13,7 @@ class PasswordMismatch extends RuntimeException {
     }
 }
 
-public class ObsPassword{
+public class PrismKeyCLI {
     
     public static String DATA_FILE = "data.csv";
     static int PASSWD_MAX_PROMPT = 3;
@@ -53,13 +53,13 @@ public class ObsPassword{
     }
     // 
     // DESCRIPTION:
-    //     show usage for ObsPassword CLI
+    //     show usage for PrismKey CLI
     public static void showUsage() {
         System.out.println("-- Usage --");
         System.out.println();
-        System.out.println("\tjava -jar obspassword list\tshow available services");
-        System.out.println("\tjava -jar obspassword generate servicename\tgenerate password");
-        System.out.println("\tjava -jar obspassword add [servicename] [length]\tadd password to service");
+        System.out.println("\tjava -jar prismkey list\tshow available services");
+        System.out.println("\tjava -jar prismkey generate servicename\tgenerate password");
+        System.out.println("\tjava -jar prismkey add [servicename] [length]\tadd password to service");
         System.out.println();
         System.out.println("*--- (not Implemented) ---");
         System.out.println("\t<remove>\tdelete data from service");

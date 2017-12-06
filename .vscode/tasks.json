@@ -18,7 +18,7 @@
         },
         {
             "taskName": "run",
-            "command": "java -jar target/obspassword-jar-with-dependencies.jar",
+            "command": "java -jar target/prismkey-jar-with-dependencies.jar",
             "options": {
                 "cwd": "${workspaceRoot}"
             },

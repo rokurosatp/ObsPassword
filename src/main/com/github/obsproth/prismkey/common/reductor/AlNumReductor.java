@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword.common.reductor;
+package com.github.obsproth.prismkey.common.reductor;
 
 public class AlNumReductor implements IReductor {
     public char[] generate(byte[] hash, int length) {

@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword.cli;
+package com.github.obsproth.prismkey.cli;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.obsproth.obspassword.ServiceElement;
+import com.github.obsproth.prismkey.ServiceElement;
 
 //
 // INternal data of service, hash, pass Names

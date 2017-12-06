@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword.common.reductor;
+package com.github.obsproth.prismkey.common.reductor;
 //
 // パスワードを生成するアルゴリズムの一覧
 //

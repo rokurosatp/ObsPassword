@@ -2,7 +2,7 @@
 // 長さを予め計算しておきテーブルっぽくなるように幅を調節する
 //
 //
-package com.github.obsproth.obspassword.cli;
+package com.github.obsproth.prismkey.cli;
 
 import java.util.ArrayList;
 import java.util.List;

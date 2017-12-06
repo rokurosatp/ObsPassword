@@ -1,4 +1,4 @@
-package com.github.obsproth.obspassword.common.reductor;
+package com.github.obsproth.prismkey.common.reductor;
 //
 // Base64を利用した英数記号混在ハッシュ→パスワード変換
 //
