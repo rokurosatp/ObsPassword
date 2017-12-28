@@ -3,7 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Console;
 import java.util.Arrays;
-import com.github.obsproth.prismkey.common.reductor.ReductorFactory;
+import com.github.obsproth.prismkey.common.generator.*;
 import com.github.obsproth.prismkey.HashUtil;
 import com.github.obsproth.prismkey.ServiceElement;
 
@@ -177,34 +177,18 @@ public class PrismKeyCLI {
             System.out.println(String.format("service %s was not found", name));
             return;
         }
-        byte[] hash = null;
-        char[] password = new char[1];
+        char[] basePassword = null;
+        char[] password = null;
         try {
             // passwordを入力するプロンプト（3回まで可）
-            password = passwordPrompt("input master password :", elem);
-            if (password != null) {
-                hash = HashUtil.calcHash(password, elem.getServiceName(), elem.getLength());
+            basePassword = passwordPrompt("input master password :", elem);
+            if(basePassword != null) {
+                password = GeneratorFactory.getGenerator(elem).generate(basePassword, elem);
+                System.out.println(password);
             }
         } finally {
-            if (password == null) {
-                return;
-            }
-            // passwordPromptでpasswordが出た時の消去
-            for(int i = 0; i < password.length; i++) {
-                password[i] = '\n';
-            }
-        }
-        if(hash == null) {
-            return;
-        }
-        char[] passwordChars = null;
-        try {
-            passwordChars = ReductorFactory.getMixer(ReductorFactory.BASE64)
-                .generate(hash, elem.getLength());
-            System.out.println(passwordChars);
-        } finally {
-            Arrays.fill(hash, (byte)0x00);
-            if (passwordChars != null) { Arrays.fill(passwordChars, '\n'); }
+            if (basePassword != null) { Arrays.fill(basePassword, '\n'); }
+            if (password != null) { Arrays.fill(password, '\n'); }            
         }
     }
 
