@@ -5,12 +5,22 @@ import java.util.Arrays;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
-public class ExBase58Reductor {
+public class ExBase58Reductor implements IReductor{
 
 	private static final String NUMBERS = "123456789";
 	private static final String CAPS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 	private static final String SMALLS = "abcdefghijkmnopqrstuvwxyz";
 	private static final int LIMIT = 64;
+
+	private boolean allowNumbers, allowCaps, allowSmalls;
+	private String symbols;
+
+	public ExBase58Reductor(boolean allowNumbers, boolean allowCaps, boolean allowSmalls, String symbols){
+		this.allowNumbers = allowNumbers;
+		this.allowCaps = allowCaps;
+		this.allowSmalls = allowSmalls;
+		this.symbols = symbols;
+	}
 
 	private static int[] convertBase(int[] unsignedHash, int base){
 		int tmp = 0;
@@ -44,19 +54,19 @@ public class ExBase58Reductor {
 		return subChars;
 	}
 
-	public char[] generate(byte[] hash, int length, boolean useNumber, boolean useCaps, boolean useSmalls, String symbols) {
+	public char[] generate(byte[] hash, int length) {
 		int[] unsignedHash = new int[hash.length];
 		for (int i = 0; i < hash.length; i++) {
 			unsignedHash[i] = hash[i] & 0xFF;
 		}
 		StringBuilder sb = new StringBuilder(LIMIT);
-		if (useNumber) {
+		if (allowNumbers) {
 			sb.append(NUMBERS);
 		}
-		if (useCaps) {
+		if (allowCaps) {
 			sb.append(CAPS);
 		}
-		if (useSmalls) {
+		if (allowSmalls) {
 			sb.append(SMALLS);
 		}
 		sb.append(symbols);
