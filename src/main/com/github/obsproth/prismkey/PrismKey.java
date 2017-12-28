@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import com.github.obsproth.prismkey.common.reductor.ReductorFactory;
+import com.github.obsproth.prismkey.common.generator.GeneratorFactory;
+import com.github.obsproth.prismkey.common.generator.GeneratorV1;
 
 public class PrismKey extends JFrame {
 
@@ -67,22 +67,25 @@ public class PrismKey extends JFrame {
 					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : NO SELECTED ROW");
 					return;
 				}
-				if (!element.getBaseHash().equals(HashUtil.getBaseHashStr(passwordField.getPassword()))) {
+				GeneratorV1 generatorV1 = GeneratorFactory.getGenerator(element);
+				char[] seedPassword = passwordField.getPassword();
+				if (generatorV1.verifySeed(seedPassword, element)) {
+					char[] password = generatorV1.generate(seedPassword, element);
+					switch (JOptionPane.showConfirmDialog(PrismKey.this, "Do you want to copy the password to the clipboard?", "",
+							JOptionPane.YES_NO_CANCEL_OPTION)) {
+					case JOptionPane.YES_OPTION:
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(password)), null);
+						break;
+					case JOptionPane.NO_OPTION:
+						JOptionPane.showMessageDialog(PrismKey.this, new String(password));
+						break;
+					}
+					Arrays.fill(password, '0');
+				}
+				else{
 					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : Password mismatch.");
-					return;
 				}
-				byte[] hash = HashUtil.calcHash(passwordField.getPassword(), element.getServiceName(), element.getLength());
-				char[] passwordChars = ReductorFactory.getMixer(ReductorFactory.BASE64).generate(hash, element.getLength());
-				switch (JOptionPane.showConfirmDialog(PrismKey.this, "Do you want to copy the password to the clipboard?", "",
-						JOptionPane.YES_NO_CANCEL_OPTION)) {
-				case JOptionPane.YES_OPTION:
-					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(new String(passwordChars)), null);
-					break;
-				case JOptionPane.NO_OPTION:
-					JOptionPane.showMessageDialog(PrismKey.this, new String(passwordChars));
-					break;
-				}
-				Arrays.fill(passwordChars, (char)0);
+				Arrays.fill(seedPassword, '0');
 			}
 		});
 		southPanel.add(genButton, BorderLayout.EAST);
@@ -119,7 +122,8 @@ public class PrismKey extends JFrame {
 					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The length must be a positive integer.");
 					return;
 				}
-				addData(new ServiceElement(name, length, HashUtil.getBaseHashStr(passwordField.getPassword())));
+				char[] seedPassword = passwordField.getPassword();
+				addData(new ServiceElement(name, length, new GeneratorV1().getSeedDigestStr(seedPassword)));
 				writeFile();
 			}
 		});
