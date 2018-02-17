@@ -1,6 +1,7 @@
 package com.github.obsproth.obspassword.cli;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.ParseException;
 import java.io.Console;
 import java.util.Arrays;
 import java.util.Base64;
@@ -34,7 +35,7 @@ public class ObsPassword{
     // 
     // DESCRIPTION:
     //     show table contents
-    public static void doList() {
+    public static void doList(Argument args) {
         ServiceTable tbl = null;
         try{
             tbl = new ServiceTable(DATA_FILE);
@@ -50,19 +51,6 @@ public class ObsPassword{
         } else {
             System.out.println("* The table has no service.");
         }
-    }
-    // 
-    // DESCRIPTION:
-    //     show usage for ObsPassword CLI
-    public static void showUsage() {
-        System.out.println("-- Usage --");
-        System.out.println();
-        System.out.println("\tjava -jar obspassword list\tshow available services");
-        System.out.println("\tjava -jar obspassword generate servicename\tgenerate password");
-        System.out.println("\tjava -jar obspassword add [servicename] [length]\tadd password to service");
-        System.out.println();
-        System.out.println("*--- (not Implemented) ---");
-        System.out.println("\t<remove>\tdelete data from service");
     }
     //
     // input password manager contains retry
@@ -114,7 +102,7 @@ public class ObsPassword{
         return baseHash;
     }
 
-    public static void doAdd(String name, String lengthStr) {
+    public static void doAdd(Argument args) {
         ServiceTable tbl = null;
         try{
             tbl = new ServiceTable(DATA_FILE);
@@ -123,48 +111,32 @@ public class ObsPassword{
             System.exit(-1);
         }
         Console cons = System.console();
-        String serviceName = name;
-        // サービス名は予めコマンドライン引数で決めておくか、実行時に入力
-        if (serviceName == null) {
-            serviceName = cons.readLine("Enter ServiceName:");
-        }
+        String serviceName = args.getString("NAME");
         int length = 16;
-        if (lengthStr != null) {
-            try{
-                length = Integer.parseInt(lengthStr);
-            } catch (NumberFormatException e) {
-                System.out.println("length must be decimal values");
+        try{
+            length = args.getInteger("LENGTH");
+            if (length <= 0 || length >= 256) {
+                System.out.println("length must be in range 1 to 255");
                 return;
             }
-        }
-        lengthPrompt: while(lengthStr == null) {
-            try{
-                lengthStr = cons.readLine("Enter Length(default 16):");
-                if(lengthStr.length() != 0) {
-                    length = Integer.parseInt(lengthStr);
-                }
-                if (length <= 0 || length >= 256) {
-                    System.out.println("length must be in range 1 to 255");
-                    continue lengthPrompt;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("input decimal values");
-                continue lengthPrompt;
-            }
+        } catch (NumberFormatException e) {
+            System.out.println("length must be decimal values");
+            return;
         }
         // passwordを入力してbaseHashを取得
         String hash = getBaseHashFromInputPassword(cons);
         if (hash == null) {
             return;
         }
-        tbl.add(name, length, hash);
-        System.out.println(String.format("Added Service %s; length:%d, Hash:%s...", name, length, hash));
+        tbl.add(serviceName, length, hash);
+        System.out.println(String.format("Added Service %s; length:%d, Hash:%s...", serviceName, length, hash));
         tbl.save(DATA_FILE);
     }
     // パスワードの生成部分 フローがあってるか怪しい
     // 
     //
-    public static void doGenerate(String name) {
+    public static void doGenerate(Argument args) {
+        String name = args.getString("NAME");
         ServiceTable tbl = null;
         try{
             tbl = new ServiceTable(DATA_FILE);
@@ -201,38 +173,68 @@ public class ObsPassword{
         System.out.println(passwordStr);
     }
 
-    public static void parseArguments(String [] args) {
-        if (args.length > 0) {
-            String operation = args[0];
-            if(operation.equals("list")) {
-                doList();
-            } else if(operation.equals("generate")) {
-                if (args.length > 1){
-                    doGenerate(args[1]);
-                } else {
-                    System.out.println("error: too few argument");
-                    showUsage();
-                }
-            } else if(operation.equals("add")) {
-                if (args.length > 2) {
-                    doAdd(args[1], args[2]);
-                } else if (args.length > 1){
-                    doAdd(args[1], null);
-                } else {
-                    doAdd(null, null);
-                }
-            } else {
-                showUsage();
-            }
-        } else {
-            System.out.println("error: command needs operation argument");
-            showUsage();
+    
+    private static ArgumentParser makeArgumentParser() {
+        BundledArgumentParser parser = new BundledArgumentParser("operation");
+        parser.setDescription("ObsPassword");
+        //options of list command
+        NormalArgumentParser listparser = new NormalArgumentParser();
+        listparser.setDescription("list services.");
+        listparser.addArgument("human-readable", true, 0);
+        listparser.addArgument("pattern", false, 1);
+        parser.addSubparser("list", listparser);        
+        //options of add command
+        NormalArgumentParser addParser = new NormalArgumentParser();
+        addParser.setDescription("add service and hash to service table.(needs password input)");
+        addParser.addArgument("human-readable", true, 0);
+        addParser.addArgument("NAME", 0);
+        addParser.addArgument("LENGTH", 1);
+        parser.addSubparser("add", addParser);
+
+        NormalArgumentParser generateParser = new NormalArgumentParser();
+        generateParser.setDescription("generate password for selected service.(needs master password input)");
+        generateParser.addArgument("NAME", 0);
+        parser.addSubparser("generate", generateParser);
+
+        //NormalArgumentParser deleteParser = new NormalArgumentParser();
+        //deleteParser.setDescription("delete password entry of selected service.");
+        //deleteParser.addArgument("NAME", 0);
+        //parser.addSubparser("delete", deleteParser);
+        return parser;
+    }
+
+    public static Argument parseArguments(String[] strArgs) {
+        ArgumentParser parser = makeArgumentParser();
+        Argument args = null;
+        try {
+            args = parser.parse(strArgs);
+        } catch (ParseException e) {
+            System.out.println(e.getMessage());
+            parser.printUsage(strArgs);
+            return null;
         }
+        if (args.containsKey("help")) {
+            parser.printUsage(strArgs);
+            return null;
+        } else if (args.containsKey("version")) {
+            System.out.println("ObsPassword Version ...");
+            return null;
+        }
+        System.out.println(args.options.toString());
+        return args;
     }
 
     public static void main(String[] args) {
-        //String hashstr = HashUtil.getBaseHashStr("PullRequest".toCharArray());
-        //System.out.println("Hash :"+hashstr);
-        parseArguments(args);
+        Argument parsedArgs = parseArguments(args);
+        if(parsedArgs != null) {
+            String operation = parsedArgs.getString("operation");
+            if(operation.equals("list")) {
+                doList(parsedArgs);
+            } else if (operation.equals("generate")) {
+                doGenerate(parsedArgs);
+            } else if (operation.equals("add")) {
+                doAdd(parsedArgs);
+            }
+        }
     }
 }
