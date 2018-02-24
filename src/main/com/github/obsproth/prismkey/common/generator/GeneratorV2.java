@@ -11,6 +11,8 @@ public class GeneratorV2 extends AbstractGenerator {
 	private static final String SEED_SALT = "PrismKeyV2";
 	private static final int SEEDHASH_LENGTH = 8;
 	private static final int STRETCHING = 123456;
+	
+	public static final String DEFAULT_SYMBOLS = "!#$&@+*.";
 
 	public GeneratorV2(List<String> config) {
 		hasher = new SaltStretchHasher(SEED_SALT, SEEDHASH_LENGTH, STRETCHING);
