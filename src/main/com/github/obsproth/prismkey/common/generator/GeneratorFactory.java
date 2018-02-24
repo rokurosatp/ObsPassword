@@ -1,5 +1,7 @@
 package com.github.obsproth.prismkey.common.generator;
 
+import java.util.List;
+
 import com.github.obsproth.prismkey.ServiceElement;
 
 public class GeneratorFactory {
@@ -14,11 +16,15 @@ public class GeneratorFactory {
 	}
 
 	public static AbstractGenerator getGenerator(ServiceElement serviceElement) {
-		switch (serviceElement.getVersion()) {
+		return getGenerator(serviceElement.getVersion(), serviceElement.config);
+	}
+
+	public static AbstractGenerator getGenerator(int version, List<String> config) {
+		switch (version) {
 		case 1:
 			return getGeneratorV1();
 		case 2:
-			return new GeneratorV2(serviceElement.config);
+			return new GeneratorV2(config);
 		default:
 			throw new UnsupportedOperationException();
 		}
