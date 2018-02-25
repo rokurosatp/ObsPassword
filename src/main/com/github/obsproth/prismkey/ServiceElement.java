@@ -13,16 +13,12 @@ public class ServiceElement {
 	private final int version;
 	public final List<String> config;
 
-	private ServiceElement(String serviceName, int length, String baseHash, int version, List<String> config) {
+	public ServiceElement(String serviceName, int length, String baseHash, int version, List<String> config) {
 		this.serviceName = serviceName;
 		this.length = length;
 		this.baseHash = baseHash.substring(0, HashUtil.BASEHASH_LENGTH);
 		this.version = version;
 		this.config = config;
-	}
-
-	public ServiceElement(String serviceName, int length, String baseHash, List<String> config) {
-		this(serviceName, length, baseHash, PrismKey.ALGO_VERSION, config);
 	}
 
 	public String getServiceName() {

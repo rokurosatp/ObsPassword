@@ -25,14 +25,15 @@ import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.github.obsproth.prismkey.common.generator.AbstractGenerator;
 import com.github.obsproth.prismkey.common.generator.GeneratorFactory;
-import com.github.obsproth.prismkey.common.generator.GeneratorV1;
+import com.github.obsproth.prismkey.common.generator.GeneratorV2;
 
 public class PrismKey extends JFrame {
 
 	private static final String VERSION = "0.1.2";
 	private static final String DATA_FILE = "data.csv";
-	public static final int ALGO_VERSION = 1;
+	public static final int ALGO_VERSION = 2;
 
 	ServiceTableModel tableModel;
 	JTable table;
@@ -67,10 +68,10 @@ public class PrismKey extends JFrame {
 					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : NO SELECTED ROW");
 					return;
 				}
-				GeneratorV1 generatorV1 = GeneratorFactory.getGenerator(element);
+				AbstractGenerator generator = GeneratorFactory.getGenerator(element);
 				char[] seedPassword = passwordField.getPassword();
-				if (generatorV1.verifySeed(seedPassword, element)) {
-					char[] password = generatorV1.generate(seedPassword, element);
+				if (generator.verifySeed(seedPassword, element)) {
+					char[] password = generator.generate(seedPassword, element);
 					switch (JOptionPane.showConfirmDialog(PrismKey.this, "Do you want to copy the password to the clipboard?", "",
 							JOptionPane.YES_NO_CANCEL_OPTION)) {
 					case JOptionPane.YES_OPTION:
@@ -122,8 +123,13 @@ public class PrismKey extends JFrame {
 					JOptionPane.showMessageDialog(PrismKey.this, "ERROR : The length must be a positive integer.");
 					return;
 				}
+				List<String> config = new ArrayList<String>();
+				config.add(JOptionPane.showConfirmDialog(PrismKey.this, "allowNumbers", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? "True" : "False");
+				config.add(JOptionPane.showConfirmDialog(PrismKey.this, "allowCaps", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? "True" : "False");
+				config.add(JOptionPane.showConfirmDialog(PrismKey.this, "allowSmalls", "", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? "True" : "False");
+				config.add(JOptionPane.showInputDialog("symbols", GeneratorV2.DEFAULT_SYMBOLS));
 				char[] seedPassword = passwordField.getPassword();
-				addData(new ServiceElement(name, length, new GeneratorV1().getSeedDigestStr(seedPassword)));
+				addData(new ServiceElement(name, length, GeneratorFactory.getLatestGenerator(config).getSeedDigestStr(seedPassword), ALGO_VERSION, config));
 				writeFile();
 			}
 		});

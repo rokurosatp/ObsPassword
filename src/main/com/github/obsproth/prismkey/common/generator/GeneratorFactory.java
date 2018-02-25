@@ -2,6 +2,7 @@ package com.github.obsproth.prismkey.common.generator;
 
 import java.util.List;
 
+import com.github.obsproth.prismkey.PrismKey;
 import com.github.obsproth.prismkey.ServiceElement;
 
 public class GeneratorFactory {
@@ -15,11 +16,15 @@ public class GeneratorFactory {
 		return generatorV1;
 	}
 
+	public static AbstractGenerator getLatestGenerator(List<String> config){
+		return getGenerator(PrismKey.ALGO_VERSION, config);
+	}
+	
 	public static AbstractGenerator getGenerator(ServiceElement serviceElement) {
 		return getGenerator(serviceElement.getVersion(), serviceElement.config);
 	}
 
-	public static AbstractGenerator getGenerator(int version, List<String> config) {
+	private static AbstractGenerator getGenerator(int version, List<String> config) {
 		switch (version) {
 		case 1:
 			return getGeneratorV1();
