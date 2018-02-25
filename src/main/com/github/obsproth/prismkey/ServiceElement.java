@@ -21,6 +21,11 @@ public class ServiceElement {
 		this.config = config;
 	}
 
+	@Deprecated
+	public ServiceElement(String serviceName, int length, String baseHash) {
+		this(serviceName, length, baseHash, 1, null);
+	}
+
 	public String getServiceName() {
 		return serviceName;
 	}
