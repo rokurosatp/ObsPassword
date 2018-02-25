@@ -87,8 +87,8 @@ class ServiceTable {
         return null;
     }
 
-    public void add(String name, int length, String baseHash) {
-        this.contents.add(new ServiceElement(name, length, baseHash));
+    public void add(String name, int length, String baseHash, int algoVersion, List<String> config) {
+        this.contents.add(new ServiceElement(name, length, baseHash, algoVersion, config));
     }
 
     // indexに対応した要素を取得q
